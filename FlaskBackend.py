@@ -13,6 +13,8 @@ import os
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 api = Api(app, version='1.1', title='Working Backend API', description='Work on a Python API to be used for later projects')
+app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
+CORS(app)
 
 #Namespace
 ns = api.namespace('items', description='Backend items')
@@ -41,7 +43,7 @@ def save_data(data_input):
         json.dump(data_input, dataFile)
 
 #Main API route - querying and parameters
-@ns.route('/queryparameter')
+@ns.route('/data')
 class Query(Resource):
 
     #GET method - Uses name and id paramehers; marshal list with data_model; uses querySchema
@@ -49,6 +51,7 @@ class Query(Resource):
         'name': 'Name of the user',
         'id': 'ID of the user'
     })
+    @api.produces(['application/json'])
     def get(self):
 
         try:
